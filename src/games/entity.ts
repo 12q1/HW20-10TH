@@ -1,6 +1,17 @@
 // src/games/entity.ts
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert} from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
+import { IsString, Length } from 'class-validator'
+
+const getRandomNumber = (max) => {
+  return Math.floor(Math.random() * Math.floor(max));
+} //end of getRandomNumber: use this to generate a random integer, define the maximum in the parameter
+
+const defaultBoard = [
+	['o', 'o', 'o'],
+	['o', 'o', 'o'],
+	['o', 'o', 'o']
+]
 
 @Entity()
 export default class Game extends BaseEntity {
@@ -8,12 +19,21 @@ export default class Game extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number
 
-  @Column('text', {nullable:false})
+  @IsString()
+  @Length(5, 25)
+  @Column('text', { nullable: false })
   name: string
 
-  @Column('text', {nullable:false})
-  color: string
+  @Column('text')
+  color?: string
 
-  @Column('text', {nullable:false})
-  board: string
+  @Column('text')
+  board?: string[][]
+
+  @BeforeInsert()
+  creator() {
+    const colors = ['red', 'green', 'blue', 'magenta', 'yellow']
+    this.color = colors[getRandomNumber(colors.length)]
+    this.board = defaultBoard
+  }
 }

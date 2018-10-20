@@ -1,10 +1,6 @@
 // src/games/controller.ts
-import { JsonController, Get, Param, Body, Patch, NotFoundError, Post, HttpCode } from 'routing-controllers'
+import { JsonController, Get, Param, Body, Patch, NotFoundError, Post, HttpCode, BadRequestError } from 'routing-controllers'
 import Game from './entity'
-
-const getRandomNumber = (max) => {
-    return Math.floor(Math.random() * Math.floor(max));
-  } //end of getRandomNumber: use this to generate a random integer, define the maximum in the parameter
 
 @JsonController()
 export default class GameController {
@@ -29,10 +25,6 @@ export default class GameController {
     createGame(
         @Body() game: Game
     ) {
-        console.log(game)
-        let colors = ['red','green','blue','magenta','yellow']
-        game.color= colors[getRandomNumber(colors.length)]
-        game.board='[]'
         return game.save()
     }//end of @Post
 
@@ -41,10 +33,13 @@ export default class GameController {
     async updateGame(
         @Param('id') id: number,
         @Body() update: Partial<Game>
-    ) {
+    ) { 
+        if(update.id)throw new BadRequestError('changing the game ID is not allowed')
         const game = await Game.findOne(id)
         if (!game) throw new NotFoundError('Cannot find game')
 
+    //------Step 5------
+        if(update.color && !update.color.match(/^(red|green|blue|yellow|magenta)$/)) throw new BadRequestError('color validation check failed')
         return Game.merge(game, update).save()
     }//end of @Put
 
