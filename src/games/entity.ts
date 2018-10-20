@@ -15,8 +15,9 @@ const defaultBoard = [
 //default board format
 
 type color = 'red' | 'green' | 'blue' | 'yellow' | 'magenta'
-//color union types
+//color union types facing problems with validations not accepting strings
 
+//------Step 1------
 @Entity()
 export default class Game extends BaseEntity {
 
@@ -36,8 +37,15 @@ export default class Game extends BaseEntity {
 
   @BeforeInsert()
   creator() {
-    const colors = ['red', 'green', 'blue', 'magenta', 'yellow']
+    //------Step 1.1------
+    //created game should receive a random color out of these colors...
+    const colors = ['red', 'green', 'blue', 'magenta', 'yellow'] 
+
+    //So every new game that gets created is assigned a random color.
     this.color = colors[getRandomNumber(colors.length)]
+
+    //------Step 6------
+    //When a game starts, your app should set the board to an empty board.
     this.board = JSON.stringify(defaultBoard)
   }
 }
