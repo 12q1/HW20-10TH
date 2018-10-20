@@ -11,7 +11,11 @@ const defaultBoard = [
 	['o', 'o', 'o'],
 	['o', 'o', 'o'],
 	['o', 'o', 'o']
-]
+] 
+//default board format
+
+type color = 'red' | 'green' | 'blue' | 'yellow' | 'magenta'
+//color union types
 
 @Entity()
 export default class Game extends BaseEntity {
@@ -25,15 +29,15 @@ export default class Game extends BaseEntity {
   name: string
 
   @Column('text')
-  color?: string
+  color?: color | string
 
   @Column('text')
-  board?: string[][]
+  board?: string
 
   @BeforeInsert()
   creator() {
     const colors = ['red', 'green', 'blue', 'magenta', 'yellow']
     this.color = colors[getRandomNumber(colors.length)]
-    this.board = defaultBoard
+    this.board = JSON.stringify(defaultBoard)
   }
 }

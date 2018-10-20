@@ -40,6 +40,7 @@ export default class GameController {
 
     //------Step 5------
         if(update.color && !update.color.match(/^(red|green|blue|yellow|magenta)$/)) throw new BadRequestError('color validation check failed')
+        console.log (update.color)
         return Game.merge(game, update).save()
     }//end of @Put
 
