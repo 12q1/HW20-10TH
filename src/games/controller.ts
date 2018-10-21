@@ -56,11 +56,10 @@ export default class GameController {
             if (x > 1) {
                 throw new BadRequestError(`Uh oh! you tried to make ${x}moves, you are only allowed one`)
             }
+            if (x < 1) {
+                throw new BadRequestError(`Uh oh! you tried to make ${x}moves, you must make one move`)
+            }
         }
-
-        //TODOrequired format moves([["o","o","o"],["o","o","o"],["o","o","o"]],[["o","o","o"],["o","x","o"],["o","o","o"]])
-
-
         return Game.merge(game, update).save()
     }//end of @Patch
 
