@@ -38,17 +38,17 @@ export default class GameController {
         @Body() update: Partial<Game>
     ) {
         //(not for id)
-        if(update.id)throw new BadRequestError('changing the game ID is not allowed')
+        if(update.id)throw new BadRequestError('Uh oh! changing the game ID is not allowed')
         const game = await Game.findOne(id)
-        if (!game) throw new NotFoundError('Cannot find game')
+        if (!game) throw new NotFoundError('Uh oh! Cannot find game')
 
     //------Step 5------
     //Validate that the color is one of these colors.
-        if(update.color && !update.color.match(/^(red|green|blue|yellow|magenta)$/)) throw new BadRequestError('color validation check failed')
+        if(update.color && !update.color.match(/^(red|green|blue|yellow|magenta)$/)) throw new BadRequestError('Uh oh! color validation check failed')
 
     //------Step 7------
     //Make sure only 1 move is made per request.
-        if(update.board && moves(JSON.parse(update.board),game.board)>1) throw new BadRequestError('move count exceeds 1')
+        if(update.board && moves(JSON.parse(update.board),game.board)>1) throw new BadRequestError('Uh oh! move count exceeds 1')
         return Game.merge(game, update).save()
     }//end of @Patch
 
