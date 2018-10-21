@@ -45,21 +45,19 @@ export default class GameController {
 
         //------Step 5------
         //Validate that the color is one of these colors.
-
         if (update.color && !update.color.match(/^(red|green|blue|yellow|magenta)$/)) throw new BadRequestError('Uh oh! color validation check failed')
 
         //------Step 7------
         //Make sure only 1 move is made per request.
-        if (update.board)
-            if (update.board && game.board) {
-                let x = moves(JSON.parse(update.board), JSON.parse(game.board))
-                if (x > 1) {
-                    throw new BadRequestError(`Uh oh! you tried to make ${x}moves, you are only allowed one`)
-                }
-                if (x < 1) {
-                    throw new BadRequestError(`Uh oh! you tried to make ${x}moves, you must make one move`)
-                }
+        if (update.board && game.board) {
+            let x = moves(JSON.parse(update.board), JSON.parse(game.board))
+            if (x > 1) {
+                throw new BadRequestError(`Uh oh! you tried to make ${x} moves, you are only allowed one`)
             }
+            if (x < 1) {
+                throw new BadRequestError(`Uh oh! you tried to make ${x} moves, you must make one move`)
+            }
+        }
         return Game.merge(game, update).save()
     }//end of @Patch
 
